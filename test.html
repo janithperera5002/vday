@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valentine Surprise for You</title>
+    <style>
+        body { margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; background: linear-gradient(135deg, #ffeef8 0%, #ffe5f0 100%); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; overflow-x: hidden; }
+        .container { text-align: center; padding: 20px; width: 100%; max-width: 800px; }
+        svg { max-width: 500px; width: 100%; height: auto; }
+        
+        /* Animation Styles (Original) */
+        .boy-body, .girl-body, .boy-head, .girl-head, .boy-arm, .girl-arm, .rose, .stem, .leaf { fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+        .boy-body, .boy-head, .boy-arm { stroke: #4a90e2; }
+        .girl-body, .girl-head, .girl-arm { stroke: #e24a90; }
+        .rose { stroke: #e74c3c; fill: none; }
+        .stem, .leaf { stroke: #27ae60; }
+        .boy-arm { animation: extendArm 3s ease-in-out infinite; transform-origin: 150px 180px; }
+        .rose-group { animation: moveRose 3s ease-in-out infinite; }
+        .girl-arm { animation: reachArm 3s ease-in-out infinite; transform-origin: 450px 180px; }
+        .heart { animation: floatHeart 3s ease-in-out infinite; opacity: 0; }
+        @keyframes extendArm { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(-30deg); } }
+        @keyframes moveRose { 0% { transform: translate(0, 0); } 50% { transform: translate(150px, -20px); } 100% { transform: translate(0, 0); } }
+        @keyframes reachArm { 0%, 40% { transform: rotate(0deg); } 50%, 90% { transform: rotate(30deg); } 100% { transform: rotate(0deg); } }
+        @keyframes floatHeart { 0%, 40% { opacity: 0; transform: translateY(0) scale(0.5); } 50% { opacity: 1; transform: translateY(-30px) scale(1); } 90%, 100% { opacity: 0; transform: translateY(-60px) scale(0.5); } }
+
+        /* Button & Typewriter Styles */
+        .btn { background-color: #e24a90; color: white; border: none; padding: 15px 30px; font-size: 18px; border-radius: 50px; cursor: pointer; box-shadow: 0 4px 15px rgba(226, 74, 144, 0.3); transition: 0.3s; margin-top: 20px; display: none; }
+        .btn:hover { transform: scale(1.05); background-color: #c23b7a; }
+        #wish-container { margin-top: 30px; padding: 20px; background: rgba(255, 255, 255, 0.5); border-radius: 20px; display: none; }
+        #typewriter { font-size: 22px; color: #d81b60; font-weight: bold; min-height: 1.5em; white-space: pre-line; }
+
+        /* Gallery Styles - Fixed Image Sizes */
+        .gallery { display: none; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-top: 30px; width: 100%; }
+        .gallery img { 
+            width: 100%; 
+            height: 180px; /* උස නියත අගයකට තිබීම */
+            object-fit: cover; /* පින්තූරය ඇද නොවී කොටුවට ගැලපීම */
+            border-radius: 10px; 
+            border: 4px solid white; 
+            cursor: pointer; 
+            transition: 0.3s; 
+        }
+        .gallery img:hover { transform: scale(1.05); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+
+        /* Lightbox (Full Screen View) */
+        #lightbox {
+            display: none; position: fixed; z-index: 1000; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.9); justify-content: center; align-items: center; flex-direction: column;
+        }
+        #lightbox-img { max-width: 90%; max-height: 75%; border: 5px solid white; border-radius: 10px; }
+        .close-btn { position: absolute; top: 20px; right: 30px; color: white; font-size: 45px; cursor: pointer; font-weight: bold; }
+        .nav-btn { color: white; font-size: 50px; cursor: pointer; position: absolute; top: 50%; transform: translateY(-50%); padding: 20px; user-select: none; transition: 0.3s; }
+        .nav-btn:hover { color: #ff69b4; }
+        .prev { left: 10px; }
+        .next { right: 10px; }
+
+        .fade-in { animation: fadeIn 1s forwards; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
+            <g class="boy">
+                <circle class="boy-head" cx="150" cy="150" r="30"/><circle class="boy-head" cx="143" cy="145" r="2" fill="#4a90e2"/><circle class="boy-head" cx="157" cy="145" r="2" fill="#4a90e2"/><path class="boy-head" d="M 140 155 Q 150 160 160 155" fill="none"/><line class="boy-body" x1="150" y1="180" x2="150" y2="260"/><line class="boy-body" x1="150" y1="190" x2="120" y2="220"/><line class="boy-arm" x1="150" y1="180" x2="200" y2="210"/><line class="boy-body" x1="150" y1="260" x2="130" y2="310"/><line class="boy-body" x1="150" y1="260" x2="170" y2="310"/>
+            </g>
+            <g class="rose-group">
+                <circle class="rose" cx="210" cy="200" r="8"/><path class="rose" d="M 210 192 Q 205 195 210 200 Q 215 195 210 192"/><path class="rose" d="M 218 200 Q 215 205 210 200 Q 215 195 218 200"/><path class="rose" d="M 210 208 Q 205 205 210 200 Q 215 205 210 208"/><path class="rose" d="M 202 200 Q 205 195 210 200 Q 205 205 202 200"/><line class="stem" x1="210" y1="208" x2="210" y2="250"/><path class="leaf" d="M 210 225 Q 205 228 207 233 Q 210 230 210 225"/><path class="leaf" d="M 210 235 Q 215 238 213 243 Q 210 240 210 235"/>
+            </g>
+            <g class="girl">
+                <circle class="girl-head" cx="450" cy="150" r="30"/><path class="girl-head" d="M 425 140 Q 425 115 450 115 Q 475 115 475 140"/><path class="girl-head" d="M 425 150 Q 420 160 422 175 Q 425 185 428 190"/><path class="girl-head" d="M 475 150 Q 480 160 478 175 Q 475 185 472 190"/><circle class="girl-head" cx="443" cy="145" r="2" fill="#e24a90"/><circle class="girl-head" cx="457" cy="145" r="2" fill="#e24a90"/><path class="girl-head" d="M 440 157 Q 450 162 460 157" fill="none"/><circle cx="438" cy="153" r="5" fill="#ffb6c1" opacity="0.5"/><circle cx="462" cy="153" r="5" fill="#ffb6c1" opacity="0.5"/><line class="girl-body" x1="450" y1="180" x2="450" y2="260"/><line class="girl-arm" x1="450" y1="180" x2="400" y2="210"/><line class="girl-body" x1="450" y1="190" x2="480" y2="220"/><line class="girl-body" x1="450" y1="260" x2="430" y2="310"/><line class="girl-body" x1="450" y1="260" x2="470" y2="310"/>
+            </g>
+            <g class="heart"><path d="M 300 150 C 300 140, 310 130, 320 130 C 330 130, 340 140, 340 150 C 340 140, 350 130, 360 130 C 370 130, 380 140, 380 150 C 380 170, 340 190, 320 200 C 300 190, 260 170, 260 150 C 260 140, 270 130, 280 130 C 290 130, 300 140, 300 150" fill="none" stroke="#ff69b4" stroke-width="2"/></g>
+        </svg>
+
+        <h2 id="main-title" style="color: #e24a90;">💕 Just for You 💕</h2>
+
+        <button id="surprise-btn" class="btn" onclick="startSurprise()">Open My❤️</button>
+
+        <div id="wish-container">
+            <div id="typewriter"></div>
+            <button id="secret-btn" class="btn" onclick="showGallery()">This is for you... 🤫</button>
+        </div>
+
+        <div id="image-gallery" class="gallery">
+            <img src="assets/1.png" alt="Memory 1">
+            <img src="assets/2.png" alt="Memory 2">
+            <img src="assets/3.png" alt="Memory 3">
+            <img src="assets/4.png" alt="Memory 4">
+            <img src="assets/5.png" alt="Memory 5">
+            <img src="assets/6.png" alt="Memory 6">
+        </div>
+    </div>
+
+    <div id="lightbox">
+        <span class="close-btn" onclick="closeLightbox()">&times;</span>
+        <span class="nav-btn prev" onclick="changeImage(-1)">&#10094;</span>
+        <img id="lightbox-img" src="">
+        <span class="nav-btn next" onclick="changeImage(1)">&#10095;</span>
+    </div>
+
+    <script>
+        // තත්පර 5ක Delay එක
+        setTimeout(() => {
+            const btn = document.getElementById('surprise-btn');
+            if(btn) {
+                btn.style.display = 'inline-block';
+                btn.classList.add('fade-in');
+            }
+        }, 5000);
+
+        const wishText = "Happy Valentine's Day My Love❤️! \n\nඔයා මගේ ජීවිතේට ආපු එක ගැන මම හදවතින්ම සතුටු වෙනවා. අපි කොච්චර දුර හිටියත්, මගේ ආදරේ හැමදාමත් ඔයා එක්කම තියෙයි. මේ පුංචි තෑග්ග ඔයා වෙනුවෙන්මයි... ✨";
+        let charIndex = 0;
+
+        function startSurprise() {
+            document.getElementById('surprise-btn').style.display = 'none';
+            document.getElementById('main-title').style.display = 'none';
+            document.getElementById('wish-container').style.display = 'block';
+            typeWriter();
+        }
+
+        function typeWriter() {
+            if (charIndex < wishText.length) {
+                document.getElementById("typewriter").innerHTML += wishText.charAt(charIndex);
+                charIndex++;
+                setTimeout(typeWriter, 60);
+            } else {
+                document.getElementById('secret-btn').style.display = 'inline-block';
+                document.getElementById('secret-btn').classList.add('fade-in');
+            }
+        }
+
+        function showGallery() {
+            document.getElementById('secret-btn').style.display = 'none';
+            const gallery = document.getElementById('image-gallery');
+            gallery.style.display = 'grid';
+            gallery.classList.add('fade-in');
+            gallery.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // --- Lightbox Fixed Logic ---
+        let currentImageIndex = 0;
+        const galleryImages = document.querySelectorAll('.gallery img');
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+
+        // ගැලරියේ සෑම පින්තූරයකටම Click Event එක ඇඩ් කිරීම
+        galleryImages.forEach((img, index) => {
+            img.addEventListener('click', () => {
+                currentImageIndex = index;
+                updateLightbox();
+                lightbox.style.display = 'flex';
+            });
+        });
+
+        function updateLightbox() {
+            lightboxImg.src = galleryImages[currentImageIndex].src;
+        }
+
+        function closeLightbox() {
+            lightbox.style.display = 'none';
+        }
+
+        function changeImage(step) {
+            currentImageIndex += step;
+            if (currentImageIndex >= galleryImages.length) currentImageIndex = 0;
+            if (currentImageIndex < 0) currentImageIndex = galleryImages.length - 1;
+            updateLightbox();
+        }
+
+        // Esc කී එකෙන් සහ පිටත ක්ලික් කිරීමෙන් වැසීම
+        window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLightbox(); });
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox || e.target.className === 'close-btn') closeLightbox();
+        });
+    </script>
+</body>
+</html>
